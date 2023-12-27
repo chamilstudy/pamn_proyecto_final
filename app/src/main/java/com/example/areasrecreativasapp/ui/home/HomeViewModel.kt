@@ -17,7 +17,7 @@ import androidx.test.core.app.ApplicationProvider
 import com.example.areasrecreativasapp.AreasApplication
 import com.example.areasrecreativasapp.data.database.Area
 import com.example.areasrecreativasapp.data.database.AreaDao
-import com.example.areasrecreativasapp.data.database.AreaDatabase
+import com.example.areasrecreativasapp.data.database.AppDatabase
 import com.example.areasrecreativasapp.states.AreasState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest

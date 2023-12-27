@@ -1,6 +1,5 @@
 package com.example.areasrecreativasapp.ui.login
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,22 +25,21 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.areasrecreativasapp.R
-import com.example.areasrecreativasapp.ui.navigation.NavScreenDir
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import com.example.areasrecreativasapp.ui.navigation.NavScreenDir
 import kotlinx.coroutines.launch
 
 @Composable
@@ -62,7 +59,6 @@ fun Login(viewModel : LoginViewModel, navController : NavController) {
     val email : String by viewModel.email.observeAsState(initial = "")
     val password : String by viewModel.password.observeAsState(initial = "")
     val loginEnable : Boolean by viewModel.loginEnable.observeAsState(initial = false)
-    var mode : MutableSet<Boolean> = remember{ mutableSetOf(false) }
 
     val isLoading : Boolean by viewModel.isLoading.observeAsState(initial = false)
 
@@ -81,12 +77,12 @@ fun Login(viewModel : LoginViewModel, navController : NavController) {
         ) {
             EmailField(email) { viewModel.onLoginChange(it, password) }
             PasswordField(password) { viewModel.onLoginChange(email, it) }
-            Register(navController, mode)
+            Register(navController)
             LoginButton(loginEnable) {
                 coRoutineScope.launch {
                     viewModel.onLoginSelected() {
                         viewModel.signInWithEmailAndPassword(email, password) {
-                            navController.navigate(route = NavScreenDir.Main.route)
+                            navController.navigate(route = NavScreenDir.Home.route)
                         }
                     }
                 }
@@ -103,14 +99,12 @@ fun EmailField(email: String, onTextFieldChanger : (String) -> Unit) {
         value = email,
         onValueChange = { onTextFieldChanger(it) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Email") },
+        label = { Text(text = stringResource(R.string.email)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         maxLines = 1,
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Black,
-            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary
+            textColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -127,15 +121,13 @@ fun PasswordField(password : String, onTextFieldChanger: (String) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             value = password,
             onValueChange = { onTextFieldChanger(it) },
-            placeholder = { Text(text = "Password") },
+            label = { Text(text = stringResource(id = R.string.password)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             maxLines = 1,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.Black,
-                focusedIndicatorColor = Color.Red,
-                unfocusedIndicatorColor = Color.Blue
+                textColor = MaterialTheme.colorScheme.primary
             )
         )
         Row (
@@ -145,28 +137,31 @@ fun PasswordField(password : String, onTextFieldChanger: (String) -> Unit) {
                 checked = passwordVisible,
                 onCheckedChange = { passwordVisible = !passwordVisible }
             )
-            Text(text = "Mostrar contraseña.")
+            Text(
+                text = stringResource(id = R.string.show_password),
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
 
 @Composable
-fun Register(navController: NavController, mode : MutableSet<Boolean>) {
+fun Register(navController: NavController) {
     Row (
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "¿No tienes cuenta?",
+            text = stringResource(id = R.string.register_request_login),
             modifier = Modifier,
             fontSize = 16.sp,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "Registrate",
+            text = stringResource(id = R.string.register2),
             modifier = Modifier.clickable { navController.navigate(NavScreenDir.Register.route) },
             fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Blue
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -179,11 +174,12 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected : () -> Unit) {
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            disabledContentColor = Color.LightGray,
         )
     ) {
         Text(
-            text = "Log-In",
-            color = MaterialTheme.colorScheme.tertiary
+            text = stringResource(id = R.string.login)
         )
     }
 }

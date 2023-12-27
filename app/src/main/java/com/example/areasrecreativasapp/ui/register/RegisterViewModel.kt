@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.auth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.tasks.await
@@ -27,8 +28,6 @@ class RegisterViewModel : ViewModel() {
     private val _isLoading = MutableLiveData<Boolean>()
     val isLoading : LiveData<Boolean> = _isLoading
 
-    private val _mode = MutableLiveData<Boolean>()
-
     private val auth : FirebaseAuth = Firebase.auth
 
     fun createUserWithEmailAndPassword(email : String, password : String, home : () -> Unit)
@@ -38,6 +37,8 @@ class RegisterViewModel : ViewModel() {
                 .addOnCompleteListener { task ->
                     if (task.isSuccessful) {
                         Log.d("RegEmailPass", "Register Completed")
+                        val displayName = task.result.user?.email?.split("@")?.get(0)
+                        createUser(displayName)
                         home()
                     } else {
                         Log.d("RegEmailPass", "Register Failed")
@@ -48,6 +49,20 @@ class RegisterViewModel : ViewModel() {
         }
     }
 
+    private fun createUser(displayName: String?) {
+        val userId = auth.currentUser?.uid
+        val user = mutableMapOf<String, Any>()
+
+        user["user_id"] = userId.toString()
+        user["display_name"] = displayName.toString()
+        FirebaseFirestore.getInstance().collection("users")
+            .add(user)
+            .addOnSuccessListener {
+                Log.d("SaveData", "Saved ${it.id}")
+            }.addOnFailureListener{
+                Log.d("SaveData", "Error ${it}")
+            }
+    }
     fun onLoginChange(email: String, password: String) {
         _email.value = email
         _password.value = password

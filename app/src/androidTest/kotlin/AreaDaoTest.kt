@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.areasrecreativasapp.data.database.Area
 import com.example.areasrecreativasapp.data.database.AreaDao
-import com.example.areasrecreativasapp.data.database.AreaDatabase
+import com.example.areasrecreativasapp.data.database.AppDatabase
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -19,18 +19,18 @@ import java.io.IOException
 @RunWith(AndroidJUnit4::class)
 class AreaDaoTest {
     private lateinit var areaDao: AreaDao
-    private lateinit var areaDatabase: AreaDatabase
+    private lateinit var appDatabase: AppDatabase
 
     @Before
     fun createDb() {
         val context: Context = ApplicationProvider.getApplicationContext()
         // Using an in-memory database because the information stored here disappears when the
         // process is killed.
-        areaDatabase = Room.inMemoryDatabaseBuilder(context, AreaDatabase::class.java)
+        appDatabase = Room.inMemoryDatabaseBuilder(context, AppDatabase::class.java)
             // Allowing main thread queries, just for testing.
             .allowMainThreadQueries()
             .build()
-        areaDao = areaDatabase.areaDao()
+        areaDao = appDatabase.areaDao()
     }
 
     @Test
@@ -46,6 +46,6 @@ class AreaDaoTest {
     @After
     @Throws(IOException::class)
     fun closeDb() {
-        areaDatabase.close()
+        appDatabase.close()
     }
 }

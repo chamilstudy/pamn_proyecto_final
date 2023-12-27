@@ -1,6 +1,5 @@
 package com.example.areasrecreativasapp.ui.register
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +12,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,23 +25,21 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.areasrecreativasapp.R
-import com.example.areasrecreativasapp.ui.navigation.NavScreenDir
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import com.example.areasrecreativasapp.ui.login.LoginViewModel
+import com.example.areasrecreativasapp.ui.navigation.NavScreenDir
 import kotlinx.coroutines.launch
 
 @Composable
@@ -86,7 +82,7 @@ fun Register(viewModel : RegisterViewModel, navController : NavController) {
                 coRoutineScope.launch {
                     viewModel.onLoginSelected() {
                         viewModel.createUserWithEmailAndPassword(email, password) {
-                            navController.navigate(route = NavScreenDir.Main.route)
+                            navController.navigate(route = NavScreenDir.Home.route)
                         }
                     }
                 }
@@ -98,19 +94,16 @@ fun Register(viewModel : RegisterViewModel, navController : NavController) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EmailField(email: String, onTextFieldChanger : (String) -> Unit) {
-
     TextField(
         value = email,
         onValueChange = { onTextFieldChanger(it) },
         modifier = Modifier.fillMaxWidth(),
-        placeholder = { Text(text = "Email") },
+        placeholder = { Text(text = stringResource(id = R.string.email)) },
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
         singleLine = true,
         maxLines = 1,
         colors = TextFieldDefaults.textFieldColors(
-            textColor = Color.Black,
-            focusedIndicatorColor = MaterialTheme.colorScheme.tertiary,
-            unfocusedIndicatorColor = MaterialTheme.colorScheme.secondary
+            textColor = MaterialTheme.colorScheme.primary
         )
     )
 }
@@ -127,15 +120,13 @@ fun PasswordField(password : String, onTextFieldChanger: (String) -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             value = password,
             onValueChange = { onTextFieldChanger(it) },
-            placeholder = { Text(text = "Password") },
+            placeholder = { Text(text = stringResource(id = R.string.password)) },
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
             singleLine = true,
             maxLines = 1,
             visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             colors = TextFieldDefaults.textFieldColors(
-                textColor = Color.Black,
-                focusedIndicatorColor = Color.Red,
-                unfocusedIndicatorColor = Color.Blue
+                textColor = MaterialTheme.colorScheme.primary
             )
         )
         Row (
@@ -145,7 +136,10 @@ fun PasswordField(password : String, onTextFieldChanger: (String) -> Unit) {
                 checked = passwordVisible,
                 onCheckedChange = { passwordVisible = !passwordVisible }
             )
-            Text(text = "Mostrar contraseña.")
+            Text(
+                text = stringResource(id = R.string.show_password),
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }
@@ -156,17 +150,17 @@ fun Login(navController: NavController) {
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         Text(
-            text = "¿Tienes cuenta?",
+            text = stringResource(id = R.string.login_request_register),
             modifier = Modifier,
             fontSize = 16.sp,
-            color = Color.Gray
+            color = MaterialTheme.colorScheme.primary
         )
         Text(
-            text = "Logueate",
+            text = stringResource(id = R.string.login2),
             modifier = Modifier.clickable { navController.navigate(NavScreenDir.Login.route) },
             fontSize = 16.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color.Blue
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary
         )
     }
 }
@@ -179,11 +173,12 @@ fun LoginButton(loginEnable: Boolean, onLoginSelected : () -> Unit) {
         shape = RoundedCornerShape(8.dp),
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = MaterialTheme.colorScheme.tertiary,
+            disabledContentColor = Color.LightGray,
         )
     ) {
         Text(
-            text = "Register",
-            color = MaterialTheme.colorScheme.tertiary
+            text = stringResource(id = R.string.register)
         )
     }
 }

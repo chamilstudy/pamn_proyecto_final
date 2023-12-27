@@ -17,20 +17,26 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 
 private val DarkColorScheme = darkColorScheme(
-    primary = Brown,
+    primary = White,
     secondary = YellowA,
+    onSecondary = DarkRed,
     tertiary = YellowB,
+    surface = DarkGray,
 
-    background = Color.White
+    background = DarkGray,
+    onBackground = MediumGray
 
 )
 
 private val LightColorScheme = lightColorScheme(
-    primary = Brown,
+    primary = Black,
     secondary = YellowA,
+    onSecondary = DarkRed,
     tertiary = YellowB,
+    surface = DarkGray,
 
-    background = Color.White
+    background = White,
+    onBackground = LightGray
 
     /* Other default colors to override
     background = Color(0xFFFFFBFE),
@@ -47,7 +53,7 @@ private val LightColorScheme = lightColorScheme(
 fun AreasRecreativasAppTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
+    dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
     val colorScheme = when {

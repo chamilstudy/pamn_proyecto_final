@@ -1,8 +1,8 @@
 package com.example.areasrecreativasapp
 
 import android.app.Application
-import com.example.areasrecreativasapp.data.database.AreaDatabase
+import com.example.areasrecreativasapp.data.database.AppDatabase
 
 class AreasApplication : Application() {
-    val database: AreaDatabase by lazy { AreaDatabase.getDatabase(this) }
+    val database: AppDatabase by lazy { AppDatabase.getDatabase(this) }
 }
